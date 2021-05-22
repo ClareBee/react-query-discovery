@@ -98,7 +98,133 @@ Also see:
 
 ## Mutations
 
-useMutate()
-onMutate
-onSuccess
-onError
+https://react-query.tanstack.com/guides/mutations
+useMutation() - to create/update/delete data or perform server side-effects
+
+isIdle or status === 'idle' - The mutation is currently idle or in a fresh/reset state
+isLoading or status === 'loading' - The mutation is currently running
+isError or status === 'error' - The mutation encountered an error
+isSuccess or status === 'success' - The mutation was successful and mutation data is available
+error - If the mutation is in an isError state, the error is available via the error property.
+data - If the mutation is in a success state, the data is available via the data property.
+
+### Mutation side effects
+
+- these become async if returning a promise in any of these callbacks
+
+```javascript
+useMutation(addProduct, {
+  onMutate: (variables) => {
+    // mutation happens
+    // Optionally return a context containing data to use when for example rolling back
+    return { id: 1 };
+  },
+  onError: (error, variables, context) => {
+    // An error happened!
+    console.log(`rolling back optimistic update with id ${context.id}`);
+  },
+  onSuccess: (data, variables, context) => {
+    // Act on data
+  },
+  onSettled: (data, error, variables, context) => {
+    // Error or success...
+  },
+});
+```
+
+- Use mutateAsync instead of mutate to get a promise which will resolve on success or throw on an error. This can for example be used to compose side effects.
+- ability to retry
+- ability to persist mutation w hydration? `hydrate(queryClient, state)`
+
+## QueryClient
+
+- queryClient.invalidateQueries('users') => marks it as stale, refetch in background if being rendered
+- e.g. invalidate queries after an onSuccess in the mutation
+- if data is returned from mutation, no need to refetch, can update with setQueryData inside the onSuccess
+-
+
+```javascript
+const mutation = useMutation(editUser, {
+  onSuccess: (data) => {
+    queryClient.setQueryData(['user', { id: 5 }], data);
+  },
+});
+mutation.mutate({
+  id: 5,
+  name: 'Jane Doe',
+});
+```
+
+- optimistic updates?
+- ability to cancel expensive queries (promise.cancel)
+- scrollrestoration? - should work out of the box
+- some methods accept a QueryFilters or MutationFilters object
+
+## Server Side Rendering (SSR)
+
+https://react-query.tanstack.com/guides/ssr
+
+- Prefetch data yourself and pass it in as initialData
+- Prefetch the query on the server, dehydrate the cache and rehydrate it on the client
+- good with Next.js (SSG & SSR)
+
+## Caching
+
+https://react-query.tanstack.com/guides/caching
+
+## Testing
+
+`npm install @testing-library/react-hooks react-test-renderer --save-dev`
+
+Example from docs:
+
+```javascript
+export function useCustomHook() {
+  return useQuery('customHook', () => 'Hello');
+}
+```
+
+Tested by:
+
+```javascript
+const queryClient = new QueryClient();
+const wrapper = ({ children }) => (
+  <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+);
+
+const { result, waitFor } = renderHook(() => useCustomHook(), { wrapper });
+
+await waitFor(() => result.current.isSuccess);
+
+expect(result.current.data).toEqual('Hello');
+```
+
+Testing requests:
+e.g. with https://www.npmjs.com/package/nock
+
+```javascript
+function useFetchData() {
+  return useQuery('fetchData', () => request('/api/data'));
+}
+```
+
+Tested by:
+
+```javascript
+const queryClient = new QueryClient();
+const wrapper = ({ children }) => (
+  <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+);
+
+const expectation = nock('http://example.com').get('/api/data').reply(200, {
+  answer: 42,
+});
+
+const { result, waitFor } = renderHook(() => useFetchData(), { wrapper });
+
+await waitFor(() => {
+  return result.current.isSuccess;
+});
+
+expect(result.current).toEqual({ answer: 42 });
+```
