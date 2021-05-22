@@ -1,6 +1,6 @@
 # React-Query discovery app
 
-Playing around with react-query on a create-react-app with TypeScript
+Playing around with react-query on a create-react-app with TypeScript & using dummy data from https://reqres.in/
 
 React Query "...makes fetching, caching, synchronizing and updating **server state** in your React applications a breeze." - https://react-query.tanstack.com/overview
 
@@ -36,3 +36,10 @@ function App() {
   );
 }
 ```
+
+## useQuery
+
+isLoading
+isFetching
+error
+data
