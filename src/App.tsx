@@ -1,6 +1,7 @@
 import React from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import './App.css';
+import List from './components/List';
 import { User, Users } from './types';
 
 const getUsers = async (): Promise<Users> => {
@@ -80,26 +81,28 @@ function App() {
   if (isLoading) {
     return <p>Is loading</p>;
   }
-  if (isError || addUserError) {
+  if (isError || addUserError || !users) {
     return <p> Something went wrong: {error} </p>;
   }
 
   return (
-    <div className="App">
-      <header className="App-header"></header>
+    <div className="bg-gray-200">
+      <header>
+        <h1>React Query Discovery</h1>
+      </header>
       <main>
-        {addingUser ? <p>Adding user</p> : null}
-        <button onClick={() => handleAddNewUser()}>Add User</button>
-        <ul>
-          {users &&
-            users.data.map((user: User) => (
-              <li key={user?.id}>
-                {user?.first_name}
-                <img src={user?.avatar} />
-              </li>
-            ))}
-        </ul>
+        <div className="flex flex-col justify-center items-center m-10 p-10">
+          <button className="m-10" onClick={() => handleAddNewUser()}>
+            Add User
+          </button>
+          {addingUser ? <p>Adding user</p> : null}
+        </div>
+
+        <div className="flex justify-center p-4 mb-10">
+          <List users={users} />
+        </div>
       </main>
+      <footer>&co; 2021 React Query Playground</footer>
     </div>
   );
 }
