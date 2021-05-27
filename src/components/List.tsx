@@ -8,7 +8,10 @@ interface ListProps {
 
 const List: React.FunctionComponent<ListProps> = ({ users }) => (
   <ul className=" bg-white shadow-xl divide-y divide-gray-300 ">
-    {users && users?.data.map((user: User) => <ListItem user={user} />)}
+    {users &&
+      users?.data?.map((user: User) => (
+        <ListItem user={user} key={user.email} />
+      ))}
   </ul>
 );
 
