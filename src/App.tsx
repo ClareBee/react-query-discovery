@@ -22,7 +22,7 @@ const App = () => {
         </main>
 
         <footer className="text-gray-900 dark:text-white py-4">
-          &co; 2021 React Query Playground
+          &copy; 2021 React Query Playground
         </footer>
       </div>
     </Router>
