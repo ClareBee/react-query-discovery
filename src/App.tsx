@@ -1,28 +1,29 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
 import { Header } from './components/Header';
 import { ListContainer as ListPage } from './containers/ListContainer';
 import { InfiniteQueryContainer as InfiniteQueryPage } from './containers/InfiniteQueryContainer';
-import { User, Users } from './types';
 
 const App = () => {
   return (
     <Router>
-      <div className="bg-gray-200">
+      <div className="bg-white dark:bg-gray-800 px-4">
         <Header />
         <main>
           <Switch>
-            <Route path="/infinite-query">
+            <Route exact path="/infinite-query">
               <InfiniteQueryPage />
             </Route>
-            <Route path="/">
+            <Route exact path="/">
               <ListPage />
             </Route>
           </Switch>
         </main>
 
-        <footer>&co; 2021 React Query Playground</footer>
+        <footer className="text-gray-900 dark:text-white py-4">
+          &co; 2021 React Query Playground
+        </footer>
       </div>
     </Router>
   );

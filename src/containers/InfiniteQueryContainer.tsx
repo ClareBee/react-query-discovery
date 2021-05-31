@@ -36,16 +36,18 @@ export const InfiniteQueryContainer: React.FunctionComponent = () => {
     <p>Error: {JSON.stringify(error)}</p>
   ) : (
     <>
-      {infiniteData?.pages &&
-        infiniteData.pages.map((users) =>
-          users.data.map((user, i) => (
-            <React.Fragment key={i}>
-              <ListItem user={user} />
-            </React.Fragment>
-          ))
-        )}
+      <ul className="flex flex-wrap">
+        {infiniteData?.pages &&
+          infiniteData.pages.map((users) =>
+            users.data.map((user) => <ListItem user={user} />)
+          )}
+      </ul>
       <div>
-        <button onClick={() => fetchNextPage()} disabled={!hasNextPage}>
+        <button
+          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full mx-auto"
+          onClick={() => fetchNextPage()}
+          disabled={!hasNextPage}
+        >
           Load More
         </button>
       </div>

@@ -7,11 +7,9 @@ interface ListProps {
 }
 
 const List: React.FunctionComponent<ListProps> = ({ users }) => (
-  <ul className=" bg-white shadow-xl divide-y divide-gray-300 ">
+  <ul className="flex flex-col justify-center items-center bg-white dark:bg-gray-200 shadow-xl divide-y divide-gray-300">
     {users &&
-      users?.data?.map((user: User) => (
-        <ListItem user={user} key={user.email} />
-      ))}
+      users?.data?.map((user: User) => <ListItem user={user} key={user.id} />)}
   </ul>
 );
 
