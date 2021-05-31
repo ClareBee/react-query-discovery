@@ -90,7 +90,7 @@ export const ListContainer: React.FunctionComponent = () => {
     <div className="flex flex-col p-4 mb-10">
       <div className="flex justify-center items-center m-10 p-10">
         <button
-          className="m-10"
+          className="m-10 p-2 px-6 hover:bg-red-700 hover:text-white"
           onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
             handleAddUser(e)
           }
